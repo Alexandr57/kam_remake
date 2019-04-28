@@ -143,6 +143,7 @@ const
 implementation
 uses
   StrUtils, Types,
+  {$IFDEF WDC} KM_Random, {$ENDIF}
   KM_Log;
 
 const
@@ -972,17 +973,43 @@ begin
 end;
 
 
-procedure LogKamRandom(aValue: Integer; const aCaller: String); overload;
+procedure DoLogKamRandom(aValue: Extended; aCaller: String; aKaMRandomFunc: String); overload;
 begin
-  if (gLog <> nil) and gLog.CanLogRandomChecks() then
-    gLog.LogRandomChecks(Format('KaMRandom: %15d Caller: %s', [aValue, aCaller]));
+  if ((gLog <> nil) and gLog.CanLogRandomChecks()) then
+    gLog.LogRandomChecks(Format('%12s: %30s Caller: %s', [aKaMRandomFunc, FormatFloat('0.##############################', aValue), aCaller]));
+end;
+
+
+procedure LogKamRandom(aValue: Single; aCaller: String; aKaMRandomFunc: String); overload;
+begin
+  DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
+
+  {$IFDEF WDC}
+  if SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+    gRandomCheckLogger.AddToLog(AnsiString(aCaller), aValue);
+  {$ENDIF}
 end;
 
 
 procedure LogKamRandom(aValue: Extended; aCaller: String; aKaMRandomFunc: String); overload;
 begin
-  if (gLog <> nil) and gLog.CanLogRandomChecks() then
-    gLog.LogRandomChecks(Format('%12s: %30s Caller: %s', [aKaMRandomFunc, FormatFloat('0.##############################', aValue), aCaller]));
+  DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
+
+  {$IFDEF WDC}
+  if SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+    gRandomCheckLogger.AddToLog(AnsiString(aCaller), aValue);
+  {$ENDIF}
+end;
+
+
+procedure LogKamRandom(aValue: Integer; aCaller: String; aKaMRandomFunc: String); overload;
+begin
+  DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
+
+  {$IFDEF WDC}
+  if SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+    gRandomCheckLogger.AddToLog(AnsiString(aCaller), aValue);
+  {$ENDIF}
 end;
 
 
@@ -1369,7 +1396,7 @@ procedure DeleteFromArray(var Arr: TIntegerArray; const Index: Integer);
 begin
   Delete(Arr, Index, 1);
 end;
-{$IFEND}
+{$ENDIF}
 
 function TryExecuteMethod(aObjParam: TObject; const aStrParam, aMethodName: String; var aErrorStr: String;
                           aMethod: TUnicodeStringObjEvent; aAttemps: Byte = DEFAULT_ATTEMPS_CNT_TO_TRY): Boolean;
