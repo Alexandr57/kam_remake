@@ -1,0 +1,22 @@
+var
+	CountEnemyPlayerDefeated: Integer;
+
+
+procedure OnMissionStart;
+begin
+	CountEnemyPlayerDefeated := 0;
+end;
+
+
+procedure OnPlayerDefeated(aPlayer: Word; TKMHandID: Word);
+begin
+	if CountEnemyPlayerDefeated > 2 then Exit;
+	
+	if (aPlayer = 3) or (aPlayer = 4) then CountEnemyPlayerDefeated := CountEnemyPlayerDefeated + 1;
+	
+	if CountEnemyPlayerDefeated = 2 then
+	begin
+		Actions.ShowMsg(0, '<$0>');
+		CountEnemyPlayerDefeated := CountEnemyPlayerDefeated + 1;
+	end;
+end;
