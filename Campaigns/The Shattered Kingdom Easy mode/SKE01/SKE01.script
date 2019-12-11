@@ -1,10 +1,12 @@
 var
 	CountEnemyPlayerDefeated: Integer;
+	IDGoal: Integer;
 
 
 procedure OnMissionStart;
 begin
 	CountEnemyPlayerDefeated := 0;
+	IDGoal := 0;
 end;
 
 
@@ -16,7 +18,18 @@ begin
 	
 	if CountEnemyPlayerDefeated = 2 then
 	begin
-		Actions.ShowMsg(0, '<$0>');
+		IDGoal := IDGoal + 1;
+		A.ShowMsg(0, '<$4>');
+		A.UnitBlock(0, 0, false); //Слуга
+		A.UnitBlock(0, 9, false); //Строитель
+		A.UnitBlock(0, 1, false); //Лесоруб
+		A.UnitBlock(0, 5, false); //Столяр
+		A.UnitBlock(0, 4, false); //Крестьянин
+		A.UnitBlock(0, 6, false); //Пекарь
+		A.UnitBlock(0, 13, false); //Рекрут
+		A.UnitBlock(0, 14, false); //Ополчение
+		A.UnitBlock(0, 17, false); //Лучник
 		CountEnemyPlayerDefeated := CountEnemyPlayerDefeated + 1;
 	end;
+	
 end;

@@ -1,1 +1,5 @@
-0:Thou must needs speedily equip new militia units! Shouldst thou fail to do this, we shall be defenceless against enemy attacks!
+0:Tasks:
+1:Protect the city [$FF0000][%s[$FF0000]][$FFFFFF]
+2:Destroy the city of Lauenburg [$FF0000][%s[$FF0000]][$FFFFFF]
+3:Destroy the city of the prince [$FF0000][%s[$FF0000]][$FFFFFF]
+4:Thou must needs speedily equip new militia units! Shouldst thou fail to do this, we shall be defenceless against enemy attacks!
