@@ -20,54 +20,32 @@ var
 
 
 { KM_ArmyAttack }
-//{ 2019-12-15
-  GA_ATTACK_SQUAD_ChangeTarget_DistTolerance         : Single =     9.4665279388;
-  GA_ATTACK_SQUAD_ChangeTarget_Delay                 : Word =  957;
-  GA_ATTACK_SQUAD_TargetReached_Position             : Word =    8;
+//{ 2019-12-26
+  GA_ATTACK_SQUAD_ChangeTarget_DistTolerance         : Single =     6.1796259880;
+  GA_ATTACK_SQUAD_ChangeTarget_Delay                 : Word =  697;
+  GA_ATTACK_SQUAD_TargetReached_Position             : Word =    2;
   GA_ATTACK_SQUAD_TargetReached_Unit                 : Word =   12;
   GA_ATTACK_SQUAD_TargetReached_House                : Word =    8;
-  GA_ATTACK_SQUAD_TargetReached_RangedSquad          : Word =   15;
-  GA_ATTACK_SQUAD_MinWalkingDistance                 : Word =    7;
+  GA_ATTACK_SQUAD_TargetReached_RangedSquad          : Word =   14;
+  GA_ATTACK_SQUAD_MinWalkingDistance                 : Word =   10;
 
-  GA_ATTACK_COMPANY_AttackRadius                     : Word =   10;
-  GA_ATTACK_COMPANY_ProtectRangedRadius              : Word =   12;
-  GA_ATTACK_COMPANY_AttackRangedGain                 : Single =     2.8249208927;
-  GA_ATTACK_COMPANY_ProtectRangedGain                : Single =     3.7131431103;
-  GA_ATTACK_COMPANY_ProtectRangedAllInDist           : Word =    2;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio1             : Single =     0.3383766413;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio2             : Single =     0.7938493490;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio3             : Single =     0.0632785782;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio4             : Single =     0.3591269553;
-  GA_ATTACK_COMPANY_TimePerATile_Slow                : Word =    6;
-  GA_ATTACK_COMPANY_TimePerATile_Fast                : Word =   10;
-
-  GA_ATTACK_COMPANY_MinimumMovement                  : Word =    4;
-  GA_ATTACK_COMPANY_Positioning_InitPolyCnt          : Word =    3;
-//}
-
-{ 2019-12-14
-  GA_ATTACK_SQUAD_ChangeTarget_DistTolerance         : Single =     1.9587301016;
-  GA_ATTACK_SQUAD_ChangeTarget_Delay                 : Word =  415;
-  GA_ATTACK_SQUAD_TargetReached_Position             : Word =    6;
-  GA_ATTACK_SQUAD_TargetReached_Unit                 : Word =   10;
-  GA_ATTACK_SQUAD_TargetReached_House                : Word =    8;
-  GA_ATTACK_SQUAD_TargetReached_RangedSquad          : Word =   15;
-  GA_ATTACK_SQUAD_MinWalkingDistance                 : Word =    6;
-
-  GA_ATTACK_COMPANY_AttackRadius                     : Word =   11;
+  GA_ATTACK_COMPANY_AttackRadius                     : Word =   14;
   GA_ATTACK_COMPANY_ProtectRangedRadius              : Word =    9;
-  GA_ATTACK_COMPANY_AttackRangedGain                 : Single =     1.8996825218;
-  GA_ATTACK_COMPANY_ProtectRangedGain                : Single =     5.0222282410;
-  GA_ATTACK_COMPANY_ProtectRangedAllInDist           : Word =    8;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio1             : Single =     0.8563764095;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio2             : Single =     0.4269955456;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio3             : Single =     0.6608481407;
-  GA_ATTACK_COMPANY_DecreaseThreat_Prio4             : Single =     0.4229704440;
-  GA_ATTACK_COMPANY_TimePerATile_Slow                : Word =    5;
-  GA_ATTACK_COMPANY_TimePerATile_Fast                : Word =   11;
+  GA_ATTACK_COMPANY_AttackRangedGain                 : Single =     3.8477339745;
+  GA_ATTACK_COMPANY_ProtectRangedGain                : Single =     1.5641868114;
+  GA_ATTACK_COMPANY_ProtectRangedAllInDist           : Word =    4;
+  GA_ATTACK_COMPANY_GroupTypePenalization            : Word =  157;
+  GA_ATTACK_COMPANY_DecreaseThreat_Prio1             : Single =     0.6768462062;
+  GA_ATTACK_COMPANY_DecreaseThreat_Prio2             : Single =     0.6052376032;
+  GA_ATTACK_COMPANY_DecreaseThreat_Prio3             : Single =     0.9684157968;
+  GA_ATTACK_COMPANY_DecreaseThreat_Prio4             : Single =     0.4872157574;
+  GA_ATTACK_COMPANY_TimePerATile_Slow                : Word =    3;//8
+  GA_ATTACK_COMPANY_TimePerATile_Fast                : Word =    3;//7
 
+  GA_ATTACK_COMPANY_MinCombatSpacing                 : Word =    3;
+  GA_ATTACK_COMPANY_MinWalkSpacing                   : Word =    3;
   GA_ATTACK_COMPANY_MinimumMovement                  : Word =    5;
-  GA_ATTACK_COMPANY_Positioning_InitPolyCnt          : Word =    3;
+  GA_ATTACK_COMPANY_Positioning_InitPolyCnt          : Word =    1;
 //}
 
 { 2019-12-13
@@ -91,6 +69,9 @@ var
   GA_ATTACK_COMPANY_DecreaseThreat_Prio4             : Single = 0.2;
   GA_ATTACK_COMPANY_TimePerATile_Slow                : Word =   7; // Max ticks per a tile (slow mode)
   GA_ATTACK_COMPANY_TimePerATile_Fast                : Word =   4; // Max ticks per a tile (fast mode)
+
+  GA_ATTACK_COMPANY_MinimumMovement                  : Word =    5; // Minimum distance to move company
+  GA_ATTACK_COMPANY_Positioning_InitPolyCnt          : Word =    1; // Affects the shape of the moving company (1 = circle, max = line)
 //}
 
 
@@ -99,6 +80,7 @@ var
 
 
 { KM_ArmyManagement }
+  GA_ARMY_MaxGgroupsInCompany                        : Word =    7;
 
 
 { KM_CityBuilder }
@@ -111,8 +93,8 @@ var
   GA_BUILDER_ChHTB_TrunkBalance                      : Single =  2.511;
   GA_BUILDER_ChHTB_AllWorkerCoef                     : Single =  7.154;
   GA_BUILDER_ChHTB_FreeWorkerCoef                    : Single =  4.251;
-  GA_BUILDER_Shortage_StoneReserve                   : Single = 29.0000000000;
-  GA_BUILDER_Shortage_Stone                          : Single = 14.0000000000;
+  GA_BUILDER_Shortage_StoneReserve                   : Single = 19.0000000000;
+  GA_BUILDER_Shortage_Stone                          : Single = 12.0000000000;
   GA_BUILDER_Shortage_Gold                           : Single = 27.638;
   GA_BUILDER_Shortage_Trunk                          : Single =  3.360;
   GA_BUILDER_Shortage_Wood                           : Single = 12.890;
@@ -211,11 +193,11 @@ var
   GA_PLANNER_PlanFields_Dist                         : Word =  3;
   GA_PLANNER_PlanFields_ExistField                   : Word = 33;
 
-  GA_PLANNER_FindPlaceForQuary_Obstacle              : Single =    35.4110183716;
-  GA_PLANNER_FindPlaceForQuary_DistCity              : Single =    10.5008840561;
-  GA_PLANNER_FindPlaceForQuary_DistTimer             : Single =     0.0000000000;
-  GA_PLANNER_FindPlaceForQuary_DistStone             : Single =    32.1478843689;
-  GA_PLANNER_FindPlaceForQuary_SnapCrit              : Single =     5.6924824715;
+  GA_PLANNER_FindPlaceForQuary_Obstacle              : Single =    14.2196416855;
+  GA_PLANNER_FindPlaceForQuary_DistCity              : Single =    24.3620433807;
+  GA_PLANNER_FindPlaceForQuary_DistTimer             : Single = 10644.8984375000;
+  GA_PLANNER_FindPlaceForQuary_DistStone             : Single =    14.4260616302;
+  GA_PLANNER_FindPlaceForQuary_SnapCrit              : Single =    24.6157531738;
 
   GA_PLANNER_FindPlaceForWoodcutter_TreeCnt          : Single =    32.1456005573273;
   GA_PLANNER_FindPlaceForWoodcutter_TreeCntTimer     : Single = 13805.7332038879;
@@ -232,7 +214,26 @@ var
 
 // Note: it is interesting to see different GA strategy for pathfinding
 // of first road to new house and pathfinding of shortcuts
-//{ 2019-11-24
+//{ 2020-01-09
+  GA_PATHFINDING_BasePrice                           : Word =   55;
+  GA_PATHFINDING_TurnPenalization                    : Word =   47;
+  GA_PATHFINDING_Road                                : Word =   43;
+  GA_PATHFINDING_noBuildArea                         : Word =    0;
+  GA_PATHFINDING_Field                               : Word =    9;
+  GA_PATHFINDING_Coal                                : Word =   36;
+  GA_PATHFINDING_Forest                              : Word =   68;
+  GA_PATHFINDING_OtherCase                           : Word =   24;
+
+  GA_SHORTCUTS_BasePrice                             : Word =   53;
+  GA_SHORTCUTS_TurnPenalization                      : Word =   64;
+  GA_SHORTCUTS_Road                                  : Word =   28;
+  GA_SHORTCUTS_noBuildArea                           : Word =   26;
+  GA_SHORTCUTS_Field                                 : Word =   18;
+  GA_SHORTCUTS_Coal                                  : Word =   41;
+  GA_SHORTCUTS_Forest                                : Word =   35;
+  GA_SHORTCUTS_OtherCase                             : Word =    9;
+//}
+{ 2019-11-24
   GA_PATHFINDING_BasePrice                           : Word =   53;
   GA_PATHFINDING_TurnPenalization                    : Word =   31;
   GA_PATHFINDING_Road                                : Word =   41;
@@ -274,8 +275,10 @@ var
 
 { KM_CityPredictor }
 //{ 2019-11-20
-  GA_PREDICTOR_WareNeedPerAWorker_Stone              : Single = 0.7038065791;
+  GA_PREDICTOR_WareNeedPerAWorker_StoneOffset        : Word =   7;
+  GA_PREDICTOR_WareNeedPerAWorker_Stone              : Single = 0.7049801946;
   GA_PREDICTOR_WareNeedPerAWorker_Wood               : Single = 0.2908146679;
+  GA_PREDICTOR_SecondSchool_MinRequiredUnits         : Word =   20;
 //}
 
 
@@ -291,7 +294,13 @@ var
 
 
 {  KM_NavMeshPathFinding }
-//{ 2019-12-15
+//{ 2019-12-25
+  GA_PATHFINDING_AvoidTraffic                        : Single =     2.7351799011;
+  GA_PATHFINDING_AvoidSpecEnemy                      : Single =     1.6479400396;
+  GA_PATHFINDING_AvoidEdges                          : Single =   129;
+//}
+
+{ 2019-12-15
   GA_PATHFINDING_AvoidTraffic                        : Single =     2.7153608799;
   GA_PATHFINDING_AvoidSpecEnemy                      : Single =     0.8165699244;
 //}

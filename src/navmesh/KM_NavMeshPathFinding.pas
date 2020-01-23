@@ -95,8 +95,8 @@ procedure TNavMeshPathFinding.Flush(aDestroy: Boolean = False);
 var
   I: Integer;
 begin
-  if not aDestroy AND (Length(fUsedNodes) <> Length(gAIFields.NavMesh.Polygons)) then
-    SetLength(fUsedNodes, Length(gAIFields.NavMesh.Polygons));
+  if not aDestroy AND (Length(fUsedNodes) <> gAIFields.NavMesh.PolygonsCnt) then
+    SetLength(fUsedNodes, gAIFields.NavMesh.PolygonsCnt);
   for I := Length(fUsedNodes)-1 downto 0 do
   begin
     fUsedNodes[I].Free;
@@ -124,7 +124,10 @@ function TNavMeshPathFinding.MovementCost(aFrom, aTo: Word; var aSPoint, aEPoint
 
   function AvoidTraffic(): Cardinal;
   begin
-    Result := Round(gAIFields.Influences.ArmyTraffic[fOwner, aTo] * GA_PATHFINDING_AvoidTraffic);
+    Result := Round(
+                + gAIFields.Influences.ArmyTraffic[fOwner, aTo] * GA_PATHFINDING_AvoidTraffic
+                + (3 - gAIFields.NavMesh.Polygons[aTo].NearbyCount) * GA_PATHFINDING_AvoidEdges
+              );
   end;
 
   function AvoidSpecEnemy(): Word;
@@ -140,7 +143,7 @@ function TNavMeshPathFinding.MovementCost(aFrom, aTo: Word; var aSPoint, aEPoint
     GT: TKMGroupType;
     Weight: Single;
   begin
-    Weight := 0;
+    Weight := (3 - gAIFields.NavMesh.Polygons[aTo].NearbyCount) * GA_PATHFINDING_AvoidEdges;
     for GT := Low(TKMGroupType) to High(TKMGroupType) do
       Weight := Weight + CHANCES[fGroupType,GT] * gAIFields.Influences.EnemyGroupPresence[fOwner, aTo, GT] * GA_PATHFINDING_AvoidSpecEnemy;
     Result := Round(Weight);
@@ -322,8 +325,8 @@ begin
   fStart := aStart;
   fEnd := aEnd;
   if (fStart = High(Word)) OR (fEnd = High(Word))
-    OR (fStart >= Length(gAIFields.NavMesh.Polygons))
-    OR (fEnd >= Length(gAIFields.NavMesh.Polygons)) then  // Non-Existing polygon
+    OR (fStart >= gAIFields.NavMesh.PolygonsCnt)
+    OR (fEnd >= gAIFields.NavMesh.PolygonsCnt) then  // Non-Existing polygon
     Exit;
   Output := MakeRoute();
   if Output then

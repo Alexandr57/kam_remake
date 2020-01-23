@@ -464,9 +464,10 @@ TX_MAPED_TERRAIN_FORCE_PAINT = 1197; //Force paint
 TX_MAPED_TERRAIN_FORCE_PAINT_HINT = 1198; //Force to override manually set tiles from tiles table while painting with brushes (if possible)
 TX_MAPED_TERRAIN_MAGIC_BRUSH_HINT = 1199; //Magic brush - using chosen mask, fixes tile transitions, for tiles that don't have transition graphics from one to the other type of terrain
 TX_MAPED_TERRAIN_NO_MASK_HINT = 1200; //No mask - use exiting tiles for transitions
-TX_MAPED_TERRAIN_MASK_1_HINT = 1201; //Softest mask - use automatically created transitions
-TX_MAPED_TERRAIN_MASK_2_HINT = 1202; //Soft mask - use automatically created transitions
-TX_MAPED_TERRAIN_MASK_3_HINT = 1203; //Hard mask - use automatically created transitions
+TX_MAPED_TERRAIN_MASK_1_HINT = 1201; //Soft1 mask - use automatically created transitions
+TX_MAPED_TERRAIN_MASK_2_HINT = 1202; //Soft2 mask - use automatically created transitions
+TX_MAPED_TERRAIN_MASK_3_HINT = 1203; //Soft3 mask - use automatically created transitions
+TX_MAPED_TERRAIN_MASK_4_HINT = 1388; //Hard mask - use automatically created transitions
 TX_MAPED_VILLAGE = 394; //Village planning
 TX_MAPED_SCRIPTS_VISUAL = 395; //Visual scripts
 TX_MAPED_SCRIPTS_GLOBAL = 396; //Global scripting
@@ -1298,7 +1299,7 @@ TX_SCRIPT_CONSOLE_CMD_NOT_FOUND = 1244; //Script console command /%s not found
 
 TX_CHAT_ACTIONS_ALLOWED_HINT = 1245; //Enable/Disable chat history and copy from chat window
 
-TX_FORM_EXPORT_CONFIRM_MSG = 1235; //Data export could take up to several minutes.\nExported data will be stored in '%s' folder.\nDo you confirm operation?
+TX_FORM_EXPORT_CONFIRM_MSG = 1235; //Data export could take up to several minutes.\nExported data will be stored in '%s' folder.\nDo you confirm this operation?
 
 TX_SPECTATOR_PANEL_CITIZENS_SLR = 1256; //Citizens (S/L/R)
 TX_SPECTATOR_PANEL_CITIZENS_HOUSE_WORKERS = 1257; //Citizens (Others)
@@ -1419,3 +1420,4 @@ TX_UNSUPPORTED_SAVE_LOAD_ERROR_MSG = 1380; //Error loading unsupported version %
 TX_UNSUPPORTED_REPLAY_LOAD_ERROR_MSG = 1381; //Error loading unsupported version %s replay from %s
 TX_UNSUPPORTED_SAVE_LOAD_WARNING_TXT = 1385; //Loading unsupported version could cause game not being properly loaded or even cause game crash
 
+TX_MENU_DEBUG_UNLOCK_CAMPAIGNS_CONFIRM = 1387; //Are you sure want to unlock all campaigns?\nThis can't be undone.\n\nIf you want to save your campaigns progress be sure you backed up your 'Campaigns.dat' file located at\n'%s'\n\nDo you confirm this operation?

@@ -111,7 +111,8 @@ type
 
     fBoundsWC: TKMRect; //WC rebuild bounds used in FlattenTerrain (put outside to fight with recursion SO error in FlattenTerrain EnsureWalkable)
 
-    function TileHasParameter(X,Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False): Boolean;
+    function TileHasParameter(X,Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False;
+                              aStrictCheck: Boolean = False): Boolean;
 
     function GetMiningRect(aRes: TKMWareType): TKMRect;
 
@@ -1247,9 +1248,12 @@ begin
 end;
 
 
-function TKMTerrain.TileHasParameter(X,Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False): Boolean;
+function TKMTerrain.TileHasParameter(X,Y: Word; aCheckTileFunc: TBooleanWordFunc; aAllow2CornerTiles: Boolean = False;
+                                     aStrictCheck: Boolean = False): Boolean;
 const
   PROHIBIT_TERKINDS: array[0..1] of TKMTerrainKind = (tkLava, tkAbyss);
+  //Strict check (for roadable)
+  STRICT_TERKINDS: array[0..4] of TKMTerrainKind = (tkGrassyWater, tkSwamp, tkIce, tkWater, tkFastWater);
 var
   I, K, Cnt: Integer;
   Corners: TKMTerrainKindsArray;
@@ -1269,6 +1273,11 @@ begin
       for I := 0 to High(PROHIBIT_TERKINDS) do
         if Corners[K] = PROHIBIT_TERKINDS[I] then
           Exit(False);
+
+      if aStrictCheck then
+        for I := 0 to High(STRICT_TERKINDS) do
+          if Corners[K] = STRICT_TERKINDS[I] then
+            Exit(False);
 
       if aCheckTileFunc(BASE_TERRAIN[Corners[K]]) then
         Inc(Cnt);
@@ -1312,7 +1321,7 @@ function TKMTerrain.TileIsRoadable(const Loc: TKMPoint): Boolean;
 //  Ter: Word;
 //  TerInfo: TKMGenTerrainInfo;
 begin
-  Result := TileHasParameter(Loc.X, Loc.Y, fTileset.TileIsRoadable);
+  Result := TileHasParameter(Loc.X, Loc.Y, fTileset.TileIsRoadable, False, True);
 //  Result := fTileset.TileIsRoadable(Land[Loc.Y, Loc.X].BaseLayer.Terrain);
 //  for L := 0 to Land[Loc.Y, Loc.X].LayersCnt - 1 do
 //  begin
@@ -2264,7 +2273,7 @@ begin
 
   //These values have been measured from KaM
   case aRes of
-    wtGoldOre: begin R1 := 144; R2 := 145; R3 := 146; R3_2 :=  -1; R4 := 147; R5 := 308; end;
+    wtGoldOre: begin R1 := 144; R2 := 145; R3 := 146; R3_2 :=  -1; R4 := 147; R5 := 307; end;
     wtIronOre: begin R1 := 148; R2 := 149; R3 := 150; R3_2 := 259; R4 := 151; R5 := 260; end;
     wtCoal:    begin R1 := 152; R2 := 153; R3 := 154; R3_2 :=  -1; R4 := 155; R5 := 263; end;
     else       begin R1 :=  -1; R2 :=  -1; R3 :=  -1; R3_2 :=  -1; R4 :=  -1; R5 :=  -1; end;
@@ -2779,6 +2788,7 @@ procedure TKMTerrain.SetField(const Loc: TKMPoint; aOwner: TKMHandID; aFieldType
     else begin
       Land[Loc.Y, Loc.X].BaseLayer.Terrain := aTerrain;
       Land[Loc.Y, Loc.X].BaseLayer.Rotation := 0;
+      Land[Loc.Y, Loc.X].LayersCnt := 0; //Do not show transitions under corn/wine field
     end;
 
     if aObj <> -1 then
@@ -2885,7 +2895,7 @@ type
 
 const
   TransitionsTerKinds: array[TStoneTransitionType] of TKMTerrainKind =
-                                                      (tkGrass, tkGrass, tkCoastSand, tkDirt, tkSnow, tkShallowSnow);
+                                                      (tkGrass, tkGrass, tkCoastSand, tkDirt, tkSnow, tkSnowOnDirt);
   TranTiles: array[TStoneTransitionType] of array[0..6] of Word =
               ((  0, 139, 138, 140, 141, 274, 301),
                (  0, 139, 138, 140, 141, 274, 301),
@@ -3790,23 +3800,14 @@ end;
 
 //Rebuilds connected areas using flood fill algorithm
 procedure TKMTerrain.UpdateWalkConnect(const aSet: array of TKMWalkConnect; aRect: TKMRect; aDiagObjectsEffected:Boolean);
-const
-  WC_PASS: array [TKMWalkConnect] of TKMTerrainPassability = (
-    tpWalk, tpWalkRoad, tpFish, tpWorker);
 var
   J: Integer;
-  WC: TKMWalkConnect;
-  AllowDiag: Boolean;
 begin
-  aRect := KMClipRect(aRect, 1, 1, fMapX-1, fMapY-1);
+  aRect := KMClipRect(aRect, 1, 1, fMapX - 1, fMapY - 1);
 
   //Process all items from set
   for J := Low(aSet) to High(aSet) do
-  begin
-    WC := aSet[J];
-    AllowDiag := (WC <> wcRoad); //Do not consider diagonals "connected" for roads
-    TKMTerrainWalkConnect.DoUpdate(aRect, WC, WC_PASS[WC], AllowDiag, aDiagObjectsEffected);
-  end;
+    TKMTerrainWalkConnect.DoUpdate(aRect, aSet[J], aDiagObjectsEffected);
 end;
 
 

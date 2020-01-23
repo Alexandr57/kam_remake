@@ -36,7 +36,7 @@ type
     procedure InsertAndSort(const aIdx: Word); virtual; // Only for sorted case
     function RemoveFromQueue(var aIdx: Word): Boolean;
 
-    procedure InitQueue(const aMaxIdx: Word; aInitIdxArray: TKMWordArray); virtual;
+    procedure InitQueue(const aMaxIdx: Integer; aInitIdxArray: TKMWordArray); virtual;
     procedure Flood(); virtual;
   public
     constructor Create(aSorted: Boolean = False); virtual;
@@ -73,9 +73,9 @@ procedure TNavMeshFloodFill.MakeNewQueue();
 begin
   fQueueCnt := 0;
   fVisitedIdx := fVisitedIdx + 1;
-  if (Length(fQueueArray) < Length(gAIFields.NavMesh.Polygons)) then
+  if (Length(fQueueArray) < gAIFields.NavMesh.PolygonsCnt) then
   begin
-    SetLength(fQueueArray, Length(gAIFields.NavMesh.Polygons));
+    SetLength(fQueueArray, gAIFields.NavMesh.PolygonsCnt);
     ClearVisitIdx();
   end;
   if (fVisitedIdx = High(Byte)) then
@@ -189,7 +189,7 @@ end;
 
 
 // Init Queue
-procedure TNavMeshFloodFill.InitQueue(const aMaxIdx: Word; aInitIdxArray: TKMWordArray);
+procedure TNavMeshFloodFill.InitQueue(const aMaxIdx: Integer; aInitIdxArray: TKMWordArray);
 const
   INIT_DISTANCE = 0;
 var
@@ -199,15 +199,16 @@ begin
   PolyArr := gAIFields.NavMesh.Polygons;
 
   MakeNewQueue();
-  for I := 0 to aMaxIdx do
-  begin
-    Idx := aInitIdxArray[I];
-    if not IsVisited(Idx) then
+  if (aMaxIdx >= 0) then
+    for I := 0 to aMaxIdx do
     begin
-      MarkAsVisited(Idx, INIT_DISTANCE, PolyArr[ Idx ].CenterPoint);
-      InsertInQueue(Idx);
+      Idx := aInitIdxArray[I];
+      if not IsVisited(Idx) then
+      begin
+        MarkAsVisited(Idx, INIT_DISTANCE, PolyArr[ Idx ].CenterPoint);
+        InsertInQueue(Idx);
+      end;
     end;
-  end;
 end;
 
 

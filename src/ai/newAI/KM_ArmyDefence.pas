@@ -84,6 +84,7 @@ type
     function DefendPoint(aTargetPoint: TKMPoint; aRestockCompany: Boolean = False; aIgnoreFirstLine: Boolean = False): Boolean;
     procedure FindEnemyInDefLine(aEnemyGroups: TKMUnitGroupArray; var aDefRequest: TKMDefendRequest);
 
+    procedure AfterMissionInit();
     procedure UpdateState(aTick: Cardinal);
     procedure LogStatus(var aBalanceText: UnicodeString);
     procedure Paint();
@@ -540,6 +541,7 @@ function TKMArmyDefence.DefendPoint(aTargetPoint: TKMPoint; aRestockCompany: Boo
   function RestockCompany(aCompany: TAICompany): Boolean;
   const
     MIN_GROUPS = 5;
+    MIN_WARRIORS = 40;
     RESERVE = 3;
   var
     I, SquadCnt: Integer;
@@ -547,9 +549,9 @@ function TKMArmyDefence.DefendPoint(aTargetPoint: TKMPoint; aRestockCompany: Boo
   begin
     Result := True;
     SquadCnt := aCompany.SquadCnt();
-    if (SquadCnt < MIN_GROUPS) then
+    if (SquadCnt < MIN_GROUPS) OR (aCompany.WarriorCnt() < MIN_WARRIORS) then
     begin
-      SquadCnt := MIN_GROUPS - SquadCnt + RESERVE;
+      SquadCnt := Max(0,MIN_GROUPS - SquadCnt) + RESERVE;
       Groups := FindGroupsAroundLoc(SquadCnt, 0, aCompany.ScanPosition, False);
       for I := 0 to Length(Groups) - 1 do
         aCompany.AddSquad( Groups[I] );
@@ -603,7 +605,7 @@ begin
 end;
 
 
-// Scan defence positions in first line and try find hostile groups in specific radius
+// Scan defence positions in first line and try to find hostile groups in specific radius
 procedure TKMArmyDefence.FindEnemyInDefLine(aEnemyGroups: TKMUnitGroupArray; var aDefRequest: TKMDefendRequest);
   // Add point with enemy presence
   procedure AddTargetPoint(aPoint: TKMPoint; var aCnt: Integer; var aTargetPoints: TKMPointArray);
@@ -675,6 +677,11 @@ begin
   fCityUnderAttack := (Cnt > 0);
 end;
 
+
+procedure TKMArmyDefence.AfterMissionInit();
+begin
+
+end;
 
 
 procedure TKMArmyDefence.UpdateState(aTick: Cardinal);
