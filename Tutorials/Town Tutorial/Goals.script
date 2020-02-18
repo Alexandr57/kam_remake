@@ -1,0 +1,182 @@
+//-- Goals.script --//
+//By Alexandr_5
+//v2.3.1
+//22.01.2020
+//Developed for KaM Remake r10745+
+//Информация по использованию написана в Readme.rtf
+
+{$IFNDEF SCRIPT_Goals}
+{$DEFINE SCRIPT_Goals}
+
+type TGoalStatus = (gsNotAvailable, gsAvailable, gsDone, gsFail);
+
+type	
+	TGoal = record
+		Number: Integer;
+		Status: TGoalStatus;
+		Delayed: Boolean;
+		IsTextVisible: Boolean;
+		IsCheckVisible: Boolean;
+		Text, CheckText, Color, ColorText: AnsiString;
+		Value, MaxValue: Integer;
+		isEndGoal: Boolean;
+	end;
+
+const
+	SE_FN_GOAL_DONE = 'Goal_Completed';
+	SE_AF_GOAL_DONE = afWav;
+	GoalValueStatus = '%s%d[] <$1> %s%d[]';
+	GoalCheckStatus = '[$5F482F][%s[$5F482F]][]';
+	
+	ID_GOAL_TEXT = 0;
+	START_ID_GOAL_TEXT = 2;
+	
+var
+	GoalTxt: array[0..3] of AnsiString;
+	GoalColor: array[0..3] of AnsiString;
+	DelayedStatusTime: Integer;
+	fIDPlayer: Integer;
+	fIsDisplayText: Boolean;
+	
+	//Задержка перед следующим заданием, победой или поражением
+	DelayDFSec: Integer;
+	Goals: Array of TGoal;
+	OutTextGoal: AnsiString;
+
+procedure SetTextColorGoal;
+begin
+	GoalTxt[0] := '';
+	GoalTxt[1] := '-';
+	GoalTxt[2] := '+';
+	GoalTxt[3] := 'x';
+	
+	GoalColor[0] := '';
+	GoalColor[1] := '[$00FFFF]';
+	GoalColor[2] := '[$00E000]';
+	GoalColor[3] := '[$0000FF]';
+end;
+
+procedure UpdateGoal(aGoalNum: Integer; aStatus: TGoalStatus; aColorTextGoal: AnsiString; aIsTextVisible: Boolean; aIsCheckVisible: Boolean; aDelayed: Boolean; aPlaySE: Boolean);
+var
+	txtGoal: AnsiString;
+begin
+	Goals[aGoalNum].Delayed := aDelayed;
+	Goals[aGoalNum].Status := aStatus;
+	Goals[aGoalNum].IsTextVisible := aIsTextVisible;
+	Goals[aGoalNum].IsCheckVisible := aIsCheckVisible;
+	
+	if aStatus = gsNotAvailable then
+		Goals[aGoalNum].ColorText := '%s';
+	
+	if Length(aColorTextGoal) = 6 then
+		Goals[aGoalNum].ColorText := '[$' + aColorTextGoal + ']%s[]'
+	else begin
+		if AnsiLowerCase(aColorTextGoal) = '$goalstatus' then
+			Goals[aGoalNum].ColorText := GoalColor[Ord(aStatus)] + '%s[]'
+		else
+			Goals[aGoalNum].ColorText := Goals[aGoalNum].ColorText;
+	end;
+	
+	if aStatus = gsNotAvailable then
+		Goals[aGoalNum].Text := ''
+	else
+	begin
+		txtGoal := '<$' + IntToStr(Goals[aGoalNum].Number + START_ID_GOAL_TEXT) + '>';
+		Goals[aGoalNum].Text := U.Format(Goals[aGoalNum].ColorText, [txtGoal]);
+	end;
+	
+	if Goals[aGoalNum].IsTextVisible then
+		Goals[aGoalNum].Text := Goals[aGoalNum].Text + ' ' + GoalValueStatus;
+		
+	if Goals[aGoalNum].IsCheckVisible then
+		Goals[aGoalNum].Text := Goals[aGoalNum].Text + ' ' + GoalCheckStatus;
+		
+	Goals[aGoalNum].CheckText := GoalTxt[Ord(aStatus)];
+	Goals[aGoalNum].Color := GoalColor[Ord(aStatus)];
+	
+	if aDelayed then
+		DelayedStatusTime := S.GameTime;
+	
+	if aPlaySE then
+		A.PlaySound(fIDPlayer, SE_FN_GOAL_DONE, SE_AF_GOAL_DONE, 1.0, True, False);
+end;
+
+procedure SetGoalValues(aGoalNum: Integer; aVal, aMaxVal: Integer);
+begin
+	Goals[aGoalNum].Value := aVal;
+	Goals[aGoalNum].MaxValue := aMaxVal;
+end;
+
+procedure InitGoals(aIDPlayer: Integer; aLengthGoals: Integer; aDelayDFSec: Integer; aIsDisplayText: Boolean);
+var 
+	I: Integer;
+begin
+	fIsDisplayText := aIsDisplayText;
+	fIDPlayer := aIDPlayer;
+	DelayDFSec := aDelayDFSec;
+	SetTextColorGoal;
+	SetLength(Goals, aLengthGoals);
+	for I := 0 to aLengthGoals - 1 do
+	begin
+		Goals[I].Number := I;
+		Goals[I].isEndGoal := False;
+		SetGoalValues(I, 0, 0);
+		UpdateGoal(I, gsNotAvailable, '', False, False, False, False);
+	end;
+end;
+
+{$I ActivationOtherGoals.script}
+
+{$EVENT evtTick:OnTickGoals}
+
+procedure OnTickGoals;
+var 
+	I: Integer;
+	OutText: AnsiString;
+begin	
+	OutText := '<$' + IntToStr(ID_GOAL_TEXT) + '>';
+	for I := 0 to Length(Goals) - 1 do
+	begin
+		if Goals[I].Delayed then
+		begin
+			if (S.GameTime - DelayedStatusTime) >= (DelayDFSec * TICK_TO_SEC) then
+			begin
+				UpdateGoal(I, Goals[I].Status, '', Goals[I].IsTextVisible, Goals[I].IsTextVisible, False, False);
+			end;
+		end;
+		
+		if Goals[I].Status <> gsNotAvailable then
+		begin
+			if Goals[I].IsTextVisible and Goals[I].IsCheckVisible then
+				OutText := OutText + U.Format(Goals[I].Text, [Goals[I].Color, Goals[I].Value, Goals[I].Color, Goals[I].MaxValue, Goals[I].Color + Goals[I].CheckText])
+			else 
+			if not Goals[I].IsTextVisible and Goals[I].IsCheckVisible then
+				OutText := OutText + U.Format(Goals[I].Text, [Goals[I].Color + Goals[I].CheckText])
+			else
+			if Goals[I].IsTextVisible and not Goals[I].IsCheckVisible then
+				OutText := OutText + U.Format(Goals[I].Text, [Goals[I].Color, Goals[I].Value, Goals[I].Color, Goals[I].MaxValue])
+			else 
+			if not Goals[I].IsTextVisible and not Goals[I].IsCheckVisible then
+				OutText := OutText + Goals[I].Text;
+			
+			if Goals[I].Delayed then Continue;
+			
+			if Goals[I].isEndGoal then Continue;
+			
+			if Goals[I].Status = gsDone then
+			begin
+				Goals[I].isEndGoal := True;
+				GoalsDone(I, fIDPlayer);
+			end else if Goals[I].Status = gsFail then
+			begin
+				Goals[I].isEndGoal := True;
+				GoalsFail(I, fIDPlayer);
+			end;
+		end;
+	end;
+	OutTextGoal := '|' + OutText + '|';
+	if fIsDisplayText then
+		A.OverlayTextSet(fIDPlayer, OutText);
+end;
+
+{$ENDIF}

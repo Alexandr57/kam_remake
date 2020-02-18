@@ -1,7 +1,61 @@
+
+
+const
+	ID_PLAYER = 0;
+	AI_PLAYER_BLUE = 1;
+	AI_PLAYER_GREEN = 2;
+	
+	CNT_H_SCHOOL = 1;
+	CNT_U_SERF = 10;
+	CNT_U_LABORER = 5;
+	
+	CNT_H_INN = 1;
+	
+	CNT_H_QUARRY = 3;
+	CNT_U_STONE_MASON = 3;
+	
+	CNT_H_WOODCUTTERS = 4;
+	CNT_U_WOODCUTTER = 4;
+	
+	CNT_H_SAWMILL = 2;
+	CNT_U_CARPENTER = 2;
+	
+	CNT_H_FISHERMANS = 3;
+	CNT_U_FISHERMAN = 3;
+	
+	CNT_H_FARM = 8;
+	CNT_P_FIELDS = 14;
+	CNT_U_FARMER = 8;
+	CNT_H_MILL = 2;
+	CNT_U_BAKER = 2;
+
+	CNT_H_BAKERY = 2;
+	CNT_U_BAKER = 2;
+	
+	CNT_H_VINEYARD = 4;
+	CNT_U_FARMER = 4;
+	CNT_W_FIELDS = 10;
+
+	CNT_H_SWINE_FARM = 2;
+	CNT_U_ANIMAL_BREEDER = 2;
+	
+	CNT_H_BUTCHERS = 1;
+	CNT_U_BUTCHER = 1;
+	CNT_H_TANNERY = 1;
+	CNT_U_BUTCHER = 1;
+	
+	CNT_H_BARRACKS = 1;
+	CNT_H_WEAPONS_WORKSHOP = 1;
+	CNT_H_ARMORY_WORKSHOP = 1;
+
 var 
   NextMsg: AnsiString;
   NextTime: Integer;
   MsgShown: array [0..29] of Boolean;
+  
+  isBuildSCHOOL, isBuildINN, isBuildQUARRY, isBuildWOODCUTTERS, isBuildSAWMILL, 
+  isBuildFISHERMANS, isBuildFARM, isBuildMILL, isBuildBAKERY, isBuildVINEYARD, 
+  isBuildSWINEFARM, isBuildBUTCHERS, isBuildTANNERY, isBuildBARRACKS: Boolean;
 
   procedure Show(aMsg, aNextMsg: Byte);
   begin
