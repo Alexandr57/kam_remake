@@ -3,7 +3,7 @@
 //v2.3.1
 //22.01.2020
 //Developed for KaM Remake r10745+
-//Информация по использованию написана в Readme.rtf
+//РРЅС„РѕСЂРјР°С†РёСЏ РїРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ РЅР°РїРёСЃР°РЅР° РІ Readme.rtf
 
 {$IFNDEF SCRIPT_Goals}
 {$DEFINE SCRIPT_Goals}
@@ -38,7 +38,7 @@ var
 	fIDPlayer: Integer;
 	fIsDisplayText: Boolean;
 	
-	//Задержка перед следующим заданием, победой или поражением
+	//Р—Р°РґРµСЂР¶РєР° РїРµСЂРµРґ СЃР»РµРґСѓСЋС‰РёРј Р·Р°РґР°РЅРёРµРј, РїРѕР±РµРґРѕР№ РёР»Рё РїРѕСЂР°Р¶РµРЅРёРµРј
 	DelayDFSec: Integer;
 	Goals: Array of TGoal;
 	OutTextGoal: AnsiString;
